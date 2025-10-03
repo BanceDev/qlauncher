@@ -19,34 +19,50 @@ int main() {
     camera.zoom = 1.0f;
 
     // Load texture
-    icon_button_t qw;
-    create_icon_button(&qw, (screenWidth / 4 - 150), (screenHeight / 2 - 225),
-                       300, 450, "./resources/qw.png");
-    icon_button_t q2;
-    create_icon_button(&q2, (screenWidth / 4 - 150), (screenHeight / 2 - 225),
-                       300, 450, "./resources/q2.png");
-    icon_button_t q3;
-    create_icon_button(&q3, (screenWidth / 4 - 150), (screenHeight / 2 - 225),
-                       300, 450, "./resources/q3.png");
-    icon_button_t q4;
-    create_icon_button(&q4, (screenWidth / 4 - 150), (screenHeight / 2 - 225),
-                       300, 450, "./resources/q4.png");
+    int btnW = 300;
+    int btnH = 450;
+    int y = (screenHeight / 2) - (btnH / 2);
+
+    // X positions for 4 evenly spaced buttons
+    int x1 = (screenWidth * 1 / 8) - (btnW / 2);
+    int x2 = (screenWidth * 3 / 8) - (btnW / 2);
+    int x3 = (screenWidth * 5 / 8) - (btnW / 2);
+    int x4 = (screenWidth * 7 / 8) - (btnW / 2);
+
+    IconButton *qw = new IconButton(x1, y, btnW, btnH, "./resources/qw.png");
+    IconButton *q2 = new IconButton(x2, y, btnW, btnH, "./resources/q2.png");
+    IconButton *q3 = new IconButton(x3, y, btnW, btnH, "./resources/q3.png");
+    IconButton *q4 = new IconButton(x4, y, btnW, btnH, "./resources/q4.png");
 
     SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
-    // Main game loop
-    while (!WindowShouldClose()) // Detect window close button or ESC key
-    {
+    bool shouldClose = false;
+
+    while (!shouldClose) {
+        // Detect the key combo: Ctrl + Alt + Q
+        if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) {
+            if (IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT)) {
+                if (IsKeyPressed(KEY_Q)) {
+                    shouldClose = true;
+                }
+            }
+        }
         // Update
         //----------------------------------------------------------------------------------
-        update_icon_button(&qw);
+        qw->update();
+        q2->update();
+        q3->update();
+        q4->update();
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
         ClearBackground(BLACK);
 
-        draw_icon_button(&qw);
+        qw->draw();
+        q2->draw();
+        q3->draw();
+        q4->draw();
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -54,7 +70,10 @@ int main() {
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    delete_icon_button(&qw);
+    delete qw;
+    delete q2;
+    delete q3;
+    delete q4;
     CloseWindow();
     //--------------------------------------------------------------------------------------
     return 0;
