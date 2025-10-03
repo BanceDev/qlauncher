@@ -1,9 +1,15 @@
 #include "icon_button.h"
+#include <raylib.h>
+#include <string>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 IconButton::IconButton(int x, int y, int w, int h, const char *icon,
-                       const char *wall) {
+                       const char *wall, const char *cmd, const char *dir) {
     this->icon = LoadTexture(icon);
     this->wall = LoadTexture(wall);
+    this->play = LoadTexture("./resources/play.png");
     this->x = x;
     this->y = y;
     this->w = w;
@@ -15,11 +21,28 @@ IconButton::IconButton(int x, int y, int w, int h, const char *icon,
     this->scale = 1.0f;
     this->target_scale = 1.0f;
     this->hovered = false;
+    this->command = cmd;
+    this->workdir = dir;
 }
 
 IconButton::~IconButton() {
     UnloadTexture(this->icon);
     UnloadTexture(this->wall);
+}
+
+void runDetached(const std::string &command, const std::string &workdir) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        setsid();
+
+        if (!workdir.empty()) {
+            chdir(workdir.c_str());
+        }
+
+        execl("/bin/sh", "sh", "-c", command.c_str(), (char *)NULL);
+
+        _exit(EXIT_FAILURE);
+    }
 }
 
 void IconButton::update() {
@@ -35,6 +58,12 @@ void IconButton::update() {
     if (CheckCollisionPointRec(mouse, bounds)) {
         this->target_scale = 1.25f;
         this->hovered = true;
+        // Check for click
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            if (!this->command.empty()) {
+                runDetached(this->command, this->workdir);
+            }
+        }
     } else {
         this->target_scale = 1.0f;
         this->hovered = false;
@@ -65,4 +94,7 @@ void IconButton::draw() {
     DrawTexturePro(this->icon, src, dst, origin, 0.0f, WHITE);
     DrawRectangleGradientEx(shadowRect, topLeft, bottomLeft, topRight,
                             bottomRight);
+    if (this->hovered) {
+        DrawTexture(this->play, this->x + 50, this->y + 150, WHITE);
+    }
 }

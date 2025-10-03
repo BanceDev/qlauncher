@@ -41,14 +41,18 @@ int main() {
     int x3 = (screenWidth * 5 / 8) - (btnW / 2);
     int x4 = (screenWidth * 7 / 8) - (btnW / 2);
 
-    IconButton *qw = new IconButton(x1, y, btnW, btnH, "./resources/qw.png",
-                                    "./resources/qw_wall.png");
-    IconButton *q2 = new IconButton(x2, y, btnW, btnH, "./resources/q2.png",
-                                    "./resources/q2_wall.jpg");
-    IconButton *q3 = new IconButton(x3, y, btnW, btnH, "./resources/q3.png",
-                                    "./resources/q3_wall.jpg");
+    IconButton *qw =
+        new IconButton(x1, y, btnW, btnH, "./resources/qw.png",
+                       "./resources/qw_wall.png", "./quake", "./games/quake");
+    IconButton *q2 =
+        new IconButton(x2, y, btnW, btnH, "./resources/q2.png",
+                       "./resources/q2_wall.jpg", "./quake2", "./games/quake2");
+    IconButton *q3 =
+        new IconButton(x3, y, btnW, btnH, "./resources/q3.png",
+                       "./resources/q3_wall.jpg", "./quake3", "./games/quake3");
     IconButton *q4 = new IconButton(x4, y, btnW, btnH, "./resources/q4.png",
-                                    "./resources/q4_wall.jpg");
+                                    "./resources/q4_wall.jpg",
+                                    "wine ./Quake4.exe", "./games/quake4");
 
     SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------

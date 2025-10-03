@@ -1,10 +1,12 @@
 #pragma once
 #include "raylib.h"
+#include <string>
 
 class IconButton {
 
   public:
-    IconButton(int x, int y, int w, int h, const char *icon, const char *wall);
+    IconButton(int x, int y, int w, int h, const char *icon, const char *wall,
+               const char *cmd, const char *dir);
     ~IconButton();
     void update();
     void draw();
@@ -14,9 +16,12 @@ class IconButton {
   private:
     Texture2D icon;
     Texture2D wall;
+    Texture2D play;
     int x, y;           // top-left position
     int w, h;           // base width/height
     float scale;        // current scale
     float target_scale; // what we're interpolating toward
     bool hovered;
+    std::string command;
+    std::string workdir;
 };
